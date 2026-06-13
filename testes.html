@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suite de Testes</title>
+
+<style>
+
+body{
+    font-family:Arial, sans-serif;
+    padding:20px;
+    background:#f4f4f4;
+}
+
+h1{
+    margin-bottom:20px;
+}
+
+.sucesso{
+    color:green;
+    margin:5px 0;
+}
+
+.falha{
+    color:red;
+    margin:5px 0;
+}
+
+</style>
+
+</head>
+<body>
+
+<h1>Suite de Testes - Gerenciador de Tarefas</h1>
+
+<div id="resultado"></div>
+
+<script>
+
+const resultado =
+document.getElementById("resultado");
+
+function testar(nome, condicao){
+
+    const p =
+    document.createElement("p");
+
+    if(condicao){
+
+        p.className = "sucesso";
+        p.textContent = "✓ " + nome;
+
+    }else{
+
+        p.className = "falha";
+        p.textContent = "✗ " + nome;
+    }
+
+    resultado.appendChild(p);
+}
+
+function criarTarefa(titulo, descricao){
+
+    return {
+        id:1,
+        titulo,
+        descricao,
+        prioridade:false,
+        status:"PENDENTE"
+    };
+}
+
+function finalizar(tarefa){
+    tarefa.status = "FINALIZADA";
+}
+
+function cancelar(tarefa){
+    tarefa.status = "CANCELADA";
+}
+
+function prioridade(tarefa){
+    tarefa.prioridade = true;
+}
+
+function pesquisar(lista,texto){
+
+    return lista.filter(t =>
+        t.titulo.includes(texto) ||
+        t.descricao.includes(texto)
+    );
+}
+
+const tarefas = [];
+
+const t1 =
+criarTarefa("Estudar","Prova");
+
+tarefas.push(t1);
+
+const t2 =
+criarTarefa("Projeto","Sistema");
+
+tarefas.push(t2);
+
+prioridade(t1);
+finalizar(t1);
+
+testar(
+    "RF-01 Cadastro de tarefa",
+    tarefas.length === 2
+);
+
+testar(
+    "RF-02 Marcar prioridade",
+    t1.prioridade === true
+);
+
+const tarefaCancelada =
+criarTarefa("Teste","Teste");
+
+cancelar(tarefaCancelada);
+
+testar(
+    "RF-03 Cancelar tarefa",
+    tarefaCancelada.status === "CANCELADA"
+);
+
+testar(
+    "RF-04 Finalizar tarefa",
+    t1.status === "FINALIZADA"
+);
+
+testar(
+    "RF-05 Listar tarefas",
+    tarefas.length > 0
+);
+
+testar(
+    "RF-06 Listar finalizadas",
+    tarefas.filter(
+        t => t.status === "FINALIZADA"
+    ).length === 1
+);
+
+testar(
+    "RF-07 Pesquisar tarefa",
+    pesquisar(
+        tarefas,
+        "Projeto"
+    ).length === 1
+);
+
+testar(
+    "TI-01 Cadastro + Listagem",
+    tarefas.length === 2
+);
+
+testar(
+    "TI-02 Cadastro + Prioridade",
+    t1.prioridade === true
+);
+
+testar(
+    "TI-03 Cadastro + Finalização",
+    t1.status === "FINALIZADA"
+);
+
+testar(
+    "TI-04 Cadastro + Cancelamento",
+    tarefaCancelada.status === "CANCELADA"
+);
+
+testar(
+    "TI-05 Pesquisa + Listagem",
+    pesquisar(
+        tarefas,
+        "Estudar"
+    ).length === 1
+);
+
+testar(
+    "TS-01 Fluxo cadastro",
+    criarTarefa(
+        "Nova",
+        "Teste"
+    ).titulo === "Nova"
+);
+
+testar(
+    "TS-02 Fluxo prioridade",
+    t1.prioridade
+);
+
+testar(
+    "TS-03 Fluxo finalização",
+    t1.status === "FINALIZADA"
+);
+
+testar(
+    "TS-04 Fluxo cancelamento",
+    tarefaCancelada.status === "CANCELADA"
+);
+
+testar(
+    "TS-05 Fluxo pesquisa",
+    pesquisar(
+        tarefas,
+        "Projeto"
+    )[0].titulo === "Projeto"
+);
+
+</script>
+
+</body>
+</html>
